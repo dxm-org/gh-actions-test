@@ -10,21 +10,25 @@ jobs:
     - name: Get the commit message
       run: echo "The commit message is ${{ github.event.head_commit.message }}"
 
-    # check if the last commit message matches the regex '\[skip:(.*?)\]'
-    # if it does, return the 1st capturing group
-    - name: Get the skip flag
-      id: skipflag
-      run: |
-        # check if the commit matches the regex
-        job_to_skip=$(echo ${{ github.event.head_commit.message }} | grep -oP '\[skip:(.*?)\]')
+    - name: determine which jobs to skip
+      uses: actions/github-script@v3
+      id: skip
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          // get the commit message
+          const commitMessage = github.context.payload.head_commit.message;
 
-        if [[ -z "$job_to_skip" ]]; then
-          echo "No skip flag found"
-          echo "::set-output name=skipflag::"
-        else
-          echo "Skip flag found: $job_to_skip"
-          echo "::set-output name=skipflag::$(echo $job_to_skip | cut -d':' -f2 | tr -d '[]')"
-        fi
+          // check if the commit message matches the regex
+          const jobToSkip = commitMessage.match(/\[skip:(.*?)\]/);
+
+          // if it does, return the 1st capturing group
+          if (jobToSkip) {
+            return jobToSkip[1];
+          }
+
+          // otherwise, return an empty string
+          return '';
 
   test_matrix:
     strategy:
