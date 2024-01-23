@@ -31,7 +31,7 @@ jobs:
           //return jobsToRun;
 
           // set the output for the next step to the jobs to run
-          return { jobsToRun: jobsToRun };
+          return { jobs: jobsToRun };
 
   # log-github-event-goodies:
   #   name: "LOG Everything on GitHub Event"
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: ${{fromJson(needs.build.outputs.what-to-run).jobsToRun}}
+        name: ${{fromJson(needs.build.outputs.what-to-run).jobs}}
       max-parallel: 3
     steps:
     - name: Matrix ${{ matrix.name }}!
