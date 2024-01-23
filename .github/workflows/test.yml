@@ -10,7 +10,7 @@ jobs:
       what-to-run: ${{ steps.what-to-run.outputs.jobs }}
     steps:
     - name: determine which jobs to skip
-      uses: actions/github-script@v3
+      uses: actions/github-script@v6
       id: what-to-run
       with:
         #github-token: ${{ secrets.GITHUB_TOKEN }}
