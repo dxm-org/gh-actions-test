@@ -20,10 +20,10 @@ jobs:
           const commitMessage = "${{github.event.head_commit.message}}";
 
           // check if the commit message matches the regex
-          const jobToSkip = commitMessage.match(/\[skip:(\s\w)+\]/);
+          const jobToSkip = commitMessage.match(/\[skip:(.*)\]/);
 
           // print the value out
-          console.log(jobToSkip);
+          console.log(jobToSkip[1]);
 
           // if it does, return the 1st capturing group
           if (jobToSkip) {
