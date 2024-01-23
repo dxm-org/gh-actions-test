@@ -10,3 +10,12 @@ jobs:
     steps:
     - name: Print a greeting
       run: echo "Hello, world!"
+
+  test_matrix:
+    strategy:
+      matrix:
+        name: ['a', 'b', 'c']
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run a matrix
+      run: echo "Hello ${{ matrix.name }}!"
