@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: ${{fromJson(needs.build.outputs.what-to-run).jobs}}
+        name: ${{fromJson(needs.build.outputs.what-to-run)}}
       max-parallel: 3
     steps:
     - name: Matrix ${{ matrix.name }}!
