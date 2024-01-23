@@ -15,7 +15,7 @@ jobs:
         script: |
           // allow jobs to be skipped by adding [skip: a b c] to the commit message
           const skip_jobs = "${{github.event.head_commit.message}}".match(/\[skip:(.*)\]/);
-          console.log(skip_jobs[1]);
+          console.log(skip_jobs);
 
           const matrixJobs = ['a', 'b', 'c']
           let jobsToRun = matrixJobs;
