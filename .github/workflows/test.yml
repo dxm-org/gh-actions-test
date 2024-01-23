@@ -17,7 +17,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           // get the commit message
-          const commitMessage = github.context.payload.head_commit.message;
+          const commitMessage = github.event.payload.head_commit.message;
 
           // check if the commit message matches the regex
           const jobToSkip = commitMessage.match(/\[skip:(.*?)\]/);
