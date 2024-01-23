@@ -13,9 +13,8 @@ jobs:
       with:
         #github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          # allow jobs to be skipped by adding [skip: a b c] to the commit message
-          const commitMessage = "${{github.event.head_commit.message}}";
-          const skip_jobs = commitMessage.match(/\[skip:(.*)\]/);
+          // allow jobs to be skipped by adding [skip: a b c] to the commit message
+          const skip_jobs = "${{github.event.head_commit.message}}".match(/\[skip:(.*)\]/);
           console.log(skip_jobs[1]);
 
           const matrixJobs = ['a', 'b', 'c']
