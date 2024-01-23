@@ -23,7 +23,7 @@ jobs:
           const jobToSkip = commitMessage.match(/\[skip:(\s\w)+\]/);
 
           // print the value out
-          console.log(jobToSkip[1]);
+          console.log(jobToSkip);
 
           // if it does, return the 1st capturing group
           if (jobToSkip) {
