@@ -25,10 +25,10 @@ jobs:
             jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
           }
 
-          //return jobsToRun;
+          return jobsToRun;
 
           // set the output for the next step to the jobs to run
-          return { jobs: jobsToRun };
+          // return { jobs: jobsToRun };
 
   # log-github-event-goodies:
   #   name: "LOG Everything on GitHub Event"
