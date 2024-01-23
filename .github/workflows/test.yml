@@ -7,9 +7,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Get the commit message
-      run: echo "The commit message is ${{ github.event.head_commit.message }}"
-
     - name: determine which jobs to skip
       uses: actions/github-script@v3
       id: what-to-run
