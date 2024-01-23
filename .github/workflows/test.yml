@@ -10,6 +10,10 @@ jobs:
     steps:
     - name: Print a greeting
       run: echo "Hello, world!"
+    
+    # a step which prints the last commit message
+    - name: Get the commit message
+      run: echo "The commit message is ${{ github.event.head_commit.message }}"
 
   test_matrix:
     strategy:
