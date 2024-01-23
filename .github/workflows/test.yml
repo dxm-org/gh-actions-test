@@ -18,11 +18,11 @@ jobs:
           const skip_jobs = commitMessage.match(/\[skip:(.*)\]/);
           console.log(skip_jobs[1]);
 
-          matrixJobs = ['a', 'b', 'c']
-          jobsToRun = matrixJobs;
+          const matrixJobs = ['a', 'b', 'c']
+          let jobsToRun = matrixJobs;
 
           if (skip_jobs) {
-            jobsToSkip = skip_jobs[1].trim().split(' ');            
+            let jobsToSkip = skip_jobs[1].trim().split(' ');            
             jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
           }
 
@@ -31,31 +31,13 @@ jobs:
           // set the output for the next step to the jobs to run
           // return { jobs: jobsToRun };
 
-  # log-github-event-goodies:
-  #   name: "LOG Everything on GitHub Event"
+  # another_matrix:
+  #   needs: build
   #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Logging
-  #       run: |
-  #         echo "${{toJSON(github.event)}}"
-
-  another_matrix:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        name: ${{fromJson(needs.build.outputs.what-to-run).jobs}}
-      max-parallel: 3
-    steps:
-    - name: Matrix ${{ matrix.name }}!
-      run: echo "Hello ${{ matrix.name }}!"
-
-  # test_matrix:
   #   strategy:
   #     matrix:
-  #       name: ['a', 'b', 'c']
+  #       name: ${{fromJson(needs.build.outputs.what-to-run).jobs}}
   #     max-parallel: 3
-  #   runs-on: ubuntu-latest
   #   steps:
-  #   - name: Run a matrix ${{ matrix.name }}!
+  #   - name: Matrix ${{ matrix.name }}!
   #     run: echo "Hello ${{ matrix.name }}!"
