@@ -12,31 +12,26 @@ jobs:
 
     - name: determine which jobs to skip
       uses: actions/github-script@v3
-      id: skip
+      id: what-to-run
       with:
         #github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          // get the commit message
-          const commitMessage = "${{github.event.head_commit.message}}";
+          # allow jobs to be skipped by adding [skip: a b c] to the commit message
+          const skip_jobs = "${{github.event.head_commit.message}}".match(/\[skip:(.*)\]/);
+          console.log(skip_jobs[1]);
 
-          // check if the commit message matches the regex
-          const jobToSkip = commitMessage.match(/\[skip:(.*)\]/);
+          matrixJobs = ['a', 'b', 'c']
+          jobsToRun = matrixJobs;
 
-          // print the value out
-          console.log(jobToSkip[1]);
-
-          // if it does, return the 1st capturing group
-          if (jobToSkip) {
-            // trim the string, then split it into an array using the space as a delimiter
-            jobsToSkip = jobToSkip[1].trim().split(' ');
-
-            matrixJobs = ['a', 'b', 'c']
-            // return only those matrixJobs that are NOT in the jobsToSkip array
-            return matrixJobs.filter(x => !jobsToSkip.includes(x));
+          if (skip_jobs) {
+            jobsToSkip = skip_jobs[1].trim().split(' ');            
+            jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
           }
 
-          // otherwise, return an empty string
-          return '';
+          //return jobsToRun;
+
+          // set the output for the next step to the jobs to run
+          return { jobsToRun: jobsToRun };
 
   # log-github-event-goodies:
   #   name: "LOG Everything on GitHub Event"
@@ -46,12 +41,23 @@ jobs:
   #       run: |
   #         echo "${{toJSON(github.event)}}"
 
-  test_matrix:
+  another_matrix:
+    needs: build
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: ['a', 'b', 'c']
+        name: ${{fromJson(needs.build.outputs.what-to-run).jobsToRun}}
       max-parallel: 3
-    runs-on: ubuntu-latest
     steps:
-    - name: Run a matrix ${{ matrix.name }}!
+    - name: Matrix ${{ matrix.name }}!
       run: echo "Hello ${{ matrix.name }}!"
+
+  # test_matrix:
+  #   strategy:
+  #     matrix:
+  #       name: ['a', 'b', 'c']
+  #     max-parallel: 3
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Run a matrix ${{ matrix.name }}!
+  #     run: echo "Hello ${{ matrix.name }}!"
