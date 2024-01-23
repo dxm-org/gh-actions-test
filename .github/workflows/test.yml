@@ -6,6 +6,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      what-to-run: ${{ steps.what-to-run.outputs.jobs }}
     steps:
     - name: determine which jobs to skip
       uses: actions/github-script@v3
