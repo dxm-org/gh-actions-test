@@ -7,11 +7,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      what-to-run: ${{ steps.what-to-run.outputs.jobs }}
+      what-to-run: ${{steps.filter.outputs.result}}
     steps:
     - name: determine which jobs to skip
       uses: actions/github-script@v6
-      id: what-to-run
+      id: filter
       with:
         #github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
@@ -27,17 +27,14 @@ jobs:
             jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
           }
 
-          // return jobsToRun;
-
-          // set the output for the next step to the jobs to run
-          return { jobs: jobsToRun };
+          return jobsToRun;
 
   another_matrix:
     needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: ${{fromJson(needs.build.outputs.what-to-run)}}
+        name: ${{ fromJson(needs.build.outputs.what-to-run) }}
       max-parallel: 3
     steps:
     - name: Matrix ${{ matrix.name }}!
