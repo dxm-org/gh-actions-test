@@ -25,18 +25,18 @@ jobs:
             jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
           }
 
-          return jobsToRun;
+          // return jobsToRun;
 
           // set the output for the next step to the jobs to run
-          // return { jobs: jobsToRun };
+          return { jobs: jobsToRun };
 
-  # another_matrix:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       name: ${{fromJson(needs.build.outputs.what-to-run).jobs}}
-  #     max-parallel: 3
-  #   steps:
-  #   - name: Matrix ${{ matrix.name }}!
-  #     run: echo "Hello ${{ matrix.name }}!"
+  another_matrix:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        name: ${{fromJson(needs.build.outputs.what-to-run).jobs}}
+      max-parallel: 3
+    steps:
+    - name: Matrix ${{ matrix.name }}!
+      run: echo "Hello ${{ matrix.name }}!"
