@@ -10,6 +10,9 @@ jobs:
     outputs:
       what-to-run: ${{steps.filter.outputs.result}}
     steps:
+    - name: Log github event
+      run: |
+        echo "${{toJSON(github.event)}}"
     - name: determine which jobs to skip
       uses: actions/github-script@v6
       id: filter
