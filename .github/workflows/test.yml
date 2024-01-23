@@ -14,10 +14,10 @@ jobs:
       uses: actions/github-script@v3
       id: skip
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        #github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           // get the commit message
-          const commitMessage = github.event.head_commit.message;
+          const commitMessage = "${{github.event.head_commit.message}}";
 
           // check if the commit message matches the regex
           const jobToSkip = commitMessage.match(/\[skip:(.*?)\]/);
@@ -30,13 +30,13 @@ jobs:
           // otherwise, return an empty string
           return '';
 
-  log-github-event-goodies:
-    name: "LOG Everything on GitHub Event"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Logging
-        run: |
-          echo "${{toJSON(github.event)}}"
+  # log-github-event-goodies:
+  #   name: "LOG Everything on GitHub Event"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Logging
+  #       run: |
+  #         echo "${{toJSON(github.event)}}"
 
   test_matrix:
     strategy:
