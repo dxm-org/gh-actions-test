@@ -6,14 +6,25 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Print a greeting
-      run: echo "Hello, world!"
-    
-    # a step which prints the last commit message
     - name: Get the commit message
       run: echo "The commit message is ${{ github.event.head_commit.message }}"
+
+    # check if the last commit message matches the regex '\[skip:(.*?)\]'
+    # if it does, return the 1st capturing group
+    - name: Get the skip flag
+      id: skipflag
+      run: |
+        # check if the commit matches the regex
+        job_to_skip=$(echo ${{ github.event.head_commit.message }} | grep -oP '\[skip:(.*?)\]')
+
+        if [[ -z "$job_to_skip" ]]; then
+          echo "No skip flag found"
+          echo "::set-output name=skipflag::"
+        else
+          echo "Skip flag found: $job_to_skip"
+          echo "::set-output name=skipflag::$(echo $job_to_skip | cut -d':' -f2 | tr -d '[]')"
+        fi
 
   test_matrix:
     strategy:
@@ -21,5 +32,5 @@ jobs:
         name: ['a', 'b', 'c']
     runs-on: ubuntu-latest
     steps:
-    - name: Run a matrix
+    - name: Run a matrix ${{ matrix.name }}!
       run: echo "Hello ${{ matrix.name }}!"
