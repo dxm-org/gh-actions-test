@@ -56,7 +56,9 @@ jobs:
         echo ----------
         echo "${{fromJson(needs.build.outputs.what-to-run)}}"
         echo ----------
-        echo "${{contains(fromJson(needs.build.outputs.what-to-run), 'a')}}"
+        echo "contains a: ${{contains(fromJson(needs.build.outputs.what-to-run), 'a')}}"
+        echo "contains b: ${{contains(fromJson(needs.build.outputs.what-to-run), 'a')}}"
+        echo "contains c: ${{contains(fromJson(needs.build.outputs.what-to-run), 'a')}}"
   
   job_a:
     needs: build
