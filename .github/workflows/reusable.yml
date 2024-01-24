@@ -15,7 +15,7 @@ on:
         type: string
 
 jobs:
-  debug:
+  terraform:
     runs-on: ubuntu-latest
     steps:
       - name: Terraform
