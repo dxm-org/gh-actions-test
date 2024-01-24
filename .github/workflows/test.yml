@@ -45,6 +45,18 @@ jobs:
   #   steps:
   #   - name: Matrix ${{ matrix.name }}!
   #     run: echo "Hello ${{ matrix.name }}!"
+
+  print_previous_results:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log previous results
+      run: |
+        echo "${{needs.build.outputs.what-to-run}}"
+        echo ----------
+        echo "${{fromJson(needs.build.outputs.what-to-run)}}"
+        echo ----------
+        echo "${{contains(fromJson(needs.build.outputs.what-to-run), 'a')}}"
   
   job_a:
     needs: build
