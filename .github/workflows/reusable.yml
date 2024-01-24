@@ -20,13 +20,13 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "should_run: ${{ github.event.inputs.should_run }}"
-          echo "identity: ${{ github.event.inputs.identity }}"
+          echo "should_run: ${{ inputs.should_run }}"
+          echo "identity: ${{ inputs.identity }}"
 
   terraform:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.should_run }}
+    if: ${{ inputs.should_run }}
     steps:
       - name: Terraform
         run: |
-          echo "Running terraform with identity: ${{ github.event.inputs.identity }}"
+          echo "Running terraform with identity: ${{ inputs.identity }}"
