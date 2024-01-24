@@ -1,0 +1,32 @@
+
+name: reusable
+
+on:
+  workflow_call:
+    inputs:
+      should_run:
+        description: 'Should the job run?'
+        required: true
+        default: true
+        type: boolean
+      identity:
+        description: 'The identity of the job'
+        required: true
+        type: string
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Terraform
+        run: |
+          echo "should_run: ${{ inputs.should_run }}"
+          echo "identity: ${{ inputs.identity }}"
+
+          if [[ "${{ inputs.should_run }}" == "false" ]]
+          then
+            echo "Skipping this run"
+            exit 0
+          fi
+
+          echo "Running terraform with identity ${{ inputs.identity }}"

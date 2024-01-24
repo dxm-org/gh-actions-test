@@ -1,0 +1,55 @@
+
+name: terraform
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      what-to-run: ${{steps.filter.outputs.result}}
+    steps:
+    - name: Log github event
+      run: |
+        echo "${{toJSON(github.event)}}"
+    - name: determine which jobs to skip
+      uses: actions/github-script@v6
+      id: filter
+      with:
+        script: |
+          // allow jobs to be skipped by adding [skip: a b c] to the commit message
+          const skip_jobs = "${{github.event.head_commit.message}}".match(/\[skip:(.*)\]/);
+          console.log(skip_jobs);
+
+          const matrixJobs = ['a', 'b', 'c']
+          let jobsToRun = matrixJobs;
+
+          if (skip_jobs) {
+            let jobsToSkip = skip_jobs[1].trim().split(' ');            
+            jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
+          }
+
+          console.log(jobsToRun);
+
+          return jobsToRun;
+  
+  job_a:
+    needs: build
+    uses: ./.github/workflows/reusable.yml
+    with:
+      should_run: ${{ contains(fromJson(needs.build.outputs.what-to-run), 'a') }}
+      identity: a
+
+  job_b:
+    needs: build
+    uses: ./.github/workflows/reusable.yml
+    with:
+      should_run: ${{ contains(fromJson(needs.build.outputs.what-to-run), 'b') }}
+      identity: b
+
+  job_c:
+    needs: build
+    uses: ./.github/workflows/reusable.yml
+    with:
+      should_run: ${{ contains(fromJson(needs.build.outputs.what-to-run), 'c') }}
+      identity: c
