@@ -31,6 +31,8 @@ jobs:
             jobsToRun = matrixJobs.filter(x => !jobsToSkip.includes(x));
           }
 
+          console.log(jobsToRun);
+
           return jobsToRun;
 
   # another_matrix:
