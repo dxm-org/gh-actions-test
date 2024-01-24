@@ -15,6 +15,14 @@ on:
         type: string
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: |
+          echo "should_run: ${{ github.event.inputs.should_run }}"
+          echo "identity: ${{ github.event.inputs.identity }}"
+
   terraform:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.should_run }}
