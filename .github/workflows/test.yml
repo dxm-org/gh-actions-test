@@ -2,7 +2,6 @@
 name: test1
 
 on: [push]
-# on: [pull_request]
 
 jobs:
   build:
@@ -17,7 +16,6 @@ jobs:
       uses: actions/github-script@v6
       id: filter
       with:
-        #github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           // allow jobs to be skipped by adding [skip: a b c] to the commit message
           const skip_jobs = "${{github.event.head_commit.message}}".match(/\[skip:(.*)\]/);
@@ -34,31 +32,6 @@ jobs:
           console.log(jobsToRun);
 
           return jobsToRun;
-
-  # another_matrix:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       name: ${{ fromJson(needs.build.outputs.what-to-run) }}
-  #     max-parallel: 3
-  #   steps:
-  #   - name: Matrix ${{ matrix.name }}!
-  #     run: echo "Hello ${{ matrix.name }}!"
-
-  print_previous_results:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Log previous results
-      run: |
-        echo "${{needs.build.outputs.what-to-run}}"
-        echo ----------
-        echo "${{fromJson(needs.build.outputs.what-to-run)}}"
-        echo ----------
-        echo "contains a: ${{contains(fromJson(needs.build.outputs.what-to-run), 'a')}}"
-        echo "contains b: ${{contains(fromJson(needs.build.outputs.what-to-run), 'b')}}"
-        echo "contains c: ${{contains(fromJson(needs.build.outputs.what-to-run), 'c')}}"
   
   job_a:
     needs: build

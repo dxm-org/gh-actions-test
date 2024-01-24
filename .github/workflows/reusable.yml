@@ -18,15 +18,15 @@ jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
+      - name: Terraform
         run: |
           echo "should_run: ${{ inputs.should_run }}"
           echo "identity: ${{ inputs.identity }}"
 
-  terraform:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.should_run }}
-    steps:
-      - name: Terraform
-        run: |
-          echo "Running terraform with identity: ${{ inputs.identity }}"
+          if [[ "${{ inputs.should_run }}" == "false" ]]
+          then
+            echo "Skipping this run"
+            exit 0
+          fi
+
+          echo "Running terraform with identity ${{ inputs.identity }}"
