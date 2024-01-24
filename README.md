@@ -5,3 +5,4 @@ ss
 blabla
 
 test
+`)` in commit msg == no bueno
