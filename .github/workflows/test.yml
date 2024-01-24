@@ -33,13 +33,34 @@ jobs:
 
           return jobsToRun;
 
-  another_matrix:
+  # another_matrix:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       name: ${{ fromJson(needs.build.outputs.what-to-run) }}
+  #     max-parallel: 3
+  #   steps:
+  #   - name: Matrix ${{ matrix.name }}!
+  #     run: echo "Hello ${{ matrix.name }}!"
+  
+  job_a: &reusable_job
     needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        name: ${{ fromJson(needs.build.outputs.what-to-run) }}
-      max-parallel: 3
-    steps:
-    - name: Matrix ${{ matrix.name }}!
-      run: echo "Hello ${{ matrix.name }}!"
+    uses: ./.github/workflows/reusable.yml
+    with:
+      should_run: ${{ contains(fromJson(needs.build.outputs.what-to-run), 'a') }}
+      identity: a
+
+  job_b:
+    needs: build
+    uses: ./.github/workflows/reusable.yml
+    with:
+      should_run: ${{ contains(fromJson(needs.build.outputs.what-to-run), 'b') }}
+      identity: b
+
+  job_c:
+    needs: build
+    uses: ./.github/workflows/reusable.yml
+    with:
+      should_run: ${{ contains(fromJson(needs.build.outputs.what-to-run), 'c') }}
+      identity: c

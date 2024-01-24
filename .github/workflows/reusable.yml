@@ -1,0 +1,24 @@
+
+name: reusable
+
+on:
+  workflow_call:
+    inputs:
+      should_run:
+        description: 'Should the job run?'
+        required: true
+        default: true
+        type: boolean
+      identity:
+        description: 'The identity of the job'
+        required: true
+        type: string
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.should_run }}
+    steps:
+      - name: Terraform
+        run: |
+          echo "Running terraform with identity: ${{ github.event.inputs.identity }}"
