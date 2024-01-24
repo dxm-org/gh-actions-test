@@ -44,7 +44,7 @@ jobs:
   #   - name: Matrix ${{ matrix.name }}!
   #     run: echo "Hello ${{ matrix.name }}!"
   
-  job_a: &reusable_job
+  job_a:
     needs: build
     uses: ./.github/workflows/reusable.yml
     with:
